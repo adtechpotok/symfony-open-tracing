@@ -10,7 +10,11 @@
   ],
   "require": {
     "php": ">=7.1",
+    "jonahgeorge/jaeger-client-php": "0.3.0",
     "symfony/dependency-injection": "~3.4.6|~4.1",
+    "symfony/http-kernel": "~3.4|~4.1",
+    "symfony/console": "~3.4|~4.0",
+    "symfony/config": "~3.4|~4.0",
     "symfony/serializer-pack": "^1.0"
   },
   "require-dev": {
