@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Adtechpotok\Bundle\SymfonyOpenTracing\EventListener;
 
 use Adtechpotok\Bundle\SymfonyOpenTracing\Services\OpenTracingService;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use OpenTracing\Formats;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 
 class HttpListener
@@ -23,8 +23,9 @@ class HttpListener
 
     /**
      * HttpListener constructor.
+     *
      * @param OpenTracingService $service
-     * @param string $activeSpanName (default value is http_request)
+     * @param string             $activeSpanName (default value is http_request)
      */
     public function __construct(OpenTracingService $service, string $activeSpanName = 'http_request')
     {
@@ -34,7 +35,6 @@ class HttpListener
 
     /**
      * @param GetResponseEvent $event
-     * @return void
      */
     public function onKernelRequest(GetResponseEvent $event): void
     {
@@ -47,7 +47,6 @@ class HttpListener
 
     /**
      * @param PostResponseEvent $event
-     * @return void
      */
     public function onKernelTerminate(PostResponseEvent $event): void
     {
@@ -60,7 +59,6 @@ class HttpListener
 
     /**
      * @param PostResponseEvent $event
-     * @return void
      */
     public function onKernelException(PostResponseEvent $event): void
     {

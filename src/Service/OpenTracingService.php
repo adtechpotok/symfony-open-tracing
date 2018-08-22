@@ -17,7 +17,7 @@ class OpenTracingService
 
     /**
      * @param string $appName
-     * @param array $config
+     * @param array  $config
      */
     public function __construct(string $appName, array $config)
     {
