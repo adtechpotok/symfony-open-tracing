@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Adtechpotok\Bundle\SymfonyOpenTracing\Services;
+namespace Adtechpotok\Bundle\SymfonyOpenTracing\Service;
 
 use Jaeger\Config;
 use OpenTracing\GlobalTracer;

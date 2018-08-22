@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Adtechpotok\Bundle\SymfonyOpenTracing\EventListener;
 
-use Adtechpotok\Bundle\SymfonyOpenTracing\Services\OpenTracingService;
+use Adtechpotok\Bundle\SymfonyOpenTracing\Service\OpenTracingService;
 use OpenTracing\Formats;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Enqueue\MessengerAdapter\Bundle\DependencyInjection;
+namespace Adtechpotok\Bundle\SymfonyOpenTracing\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

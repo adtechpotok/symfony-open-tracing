@@ -1,6 +1,6 @@
 services:
     open_tracing.tracer:
-        class: Adtechpotok\Bundle\SymfonyOpenTracing\Services\OpenTracingService
+        class: Adtechpotok\Bundle\SymfonyOpenTracing\Service\OpenTracingService
         arguments:
             - 'symfony-open-tracing'
             - sampler:
