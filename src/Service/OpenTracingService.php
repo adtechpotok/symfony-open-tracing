@@ -6,6 +6,7 @@ namespace Adtechpotok\Bundle\SymfonyOpenTracing\Service;
 
 use Jaeger\Config;
 use OpenTracing\GlobalTracer;
+use OpenTracing\NoopTracer;
 use OpenTracing\Tracer;
 
 class OpenTracingService
@@ -21,9 +22,13 @@ class OpenTracingService
      */
     public function __construct(string $appName, array $config)
     {
-        (new Config($config, $appName))->initializeTracer();
+        if (isset($config['null_tracer']) && $config['null_tracer']) {
+            $this->tracer = new NoopTracer();
+        } else {
+            (new Config($config, $appName))->initializeTracer();
 
-        $this->tracer = GlobalTracer::get();
+            $this->tracer = GlobalTracer::get();
+        }
     }
 
     /**

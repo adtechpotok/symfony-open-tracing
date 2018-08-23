@@ -7,3 +7,4 @@ parameters:
           local_agent:
               reporting_host: 0.0.0.0
           logging: true
+          null_tracer: false

@@ -7,6 +7,7 @@ namespace Adtechpotok\Bundle\SymfonyOpenTracing\EventListener;
 use Adtechpotok\Bundle\SymfonyOpenTracing\Contract\GetSpanNameByRequest;
 use Adtechpotok\Bundle\SymfonyOpenTracing\Service\OpenTracingService;
 use OpenTracing\Formats;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
@@ -56,6 +57,20 @@ class HttpListener
     }
 
     /**
+     * @param FilterResponseEvent $event
+     */
+    public function onKernelResponse(FilterResponseEvent $event): void
+    {
+        $span = $this->openTracing->getTracer()->getActiveSpan();
+
+        if ($span) {
+            $headers = [];
+            $this->openTracing->getTracer()->inject($span->getContext(), Formats\HTTP_HEADERS, $headers);
+            $event->getResponse()->headers->add($headers);
+        }
+    }
+
+    /**
      * @param PostResponseEvent $event
      */
     public function onKernelTerminate(PostResponseEvent $event): void
@@ -80,6 +95,10 @@ class HttpListener
 
         if ($span) {
             if ($event->hasResponse()) {
+                $headers = [];
+                $this->openTracing->getTracer()->inject($span->getContext(), Formats\HTTP_HEADERS, $headers);
+                $event->getResponse()->headers->add($headers);
+
                 $span->setTag('http.status_code', $event->getResponse()->getStatusCode());
             }
 

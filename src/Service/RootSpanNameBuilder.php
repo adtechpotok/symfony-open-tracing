@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RootSpanNameBuilder implements GetSpanNameByRequest
 {
-    protected const ROUTE_NOT_FOUND = 'not_found';
+    protected const ROUTE_NOT_FOUND = 'route_not_found';
 
     /**
      * @var string
