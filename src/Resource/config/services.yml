@@ -31,3 +31,7 @@ services:
             - {name: kernel.event_listener, event: console.command}
             - {name: kernel.event_listener, event: console.terminate}
             - {name: kernel.event_listener, event: console.error}
+
+    open_tracing.tracer.jaeger:
+        class: OpenTracing\Tracer
+        factory: ['@open_tracing.tracer', getTracer]
