@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Adtechpotok\Bundle\SymfonyOpenTracing\Service;
 
-use Jaeger\Factory;
+use Jaeger\Config;
+use OpenTracing\GlobalTracer;
 use OpenTracing\Tracer;
 
 class OpenTracingService
@@ -16,19 +17,13 @@ class OpenTracingService
 
     /**
      * @param string $appName
-     * @param string $host
-     * @param int    $port
-     * @param bool   $isDisabled = false
+     * @param array  $config
      */
-    public function __construct(string $appName, string $host, int $port, bool $isDisabled = false)
+    public function __construct(string $appName, array $config)
     {
-        $factory = Factory::getInstance();
+        (new Config($config, $appName))->initializeTracer();
 
-        $factory->setDisabled($isDisabled);
-
-        $tracer = $factory->initTracer($appName, $host, $port);
-
-        $this->tracer = $tracer;
+        $this->tracer = GlobalTracer::get();
     }
 
     /**
