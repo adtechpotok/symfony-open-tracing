@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Adtechpotok\Bundle\SymfonyOpenTracing\EventListener;
 
+use Adtechpotok\Bundle\SymfonyOpenTracing\Contract\GetSpanNameByRequest;
 use Adtechpotok\Bundle\SymfonyOpenTracing\Service\OpenTracingService;
 use OpenTracing\Formats;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 
 class HttpListener
@@ -17,20 +19,20 @@ class HttpListener
     protected $openTracing;
 
     /**
-     * @var string
+     * @var GetSpanNameByRequest
      */
-    protected $activeSpanName;
+    protected $nameGetter;
 
     /**
      * HttpListener constructor.
      *
-     * @param OpenTracingService $service
-     * @param string             $activeSpanName (default value is http_request)
+     * @param OpenTracingService   $service
+     * @param GetSpanNameByRequest $nameGetter
      */
-    public function __construct(OpenTracingService $service, string $activeSpanName = 'http_request')
+    public function __construct(OpenTracingService $service, GetSpanNameByRequest $nameGetter)
     {
         $this->openTracing = $service;
-        $this->activeSpanName = $activeSpanName;
+        $this->nameGetter = $nameGetter;
     }
 
     /**
@@ -39,10 +41,18 @@ class HttpListener
     public function onKernelRequest(GetResponseEvent $event): void
     {
         $tracer = $this->openTracing->getTracer();
+        $request = $event->getRequest();
 
-        $tracer->extract(Formats\HTTP_HEADERS, $event->getRequest()->request->all());
+        $context = $tracer->extract(Formats\HTTP_HEADERS, $request->headers->all());
 
-        $tracer->startActiveSpan($this->activeSpanName);
+        if ($context) {
+            $tracer->startActiveSpan($this->nameGetter->getNameByRequest($request), ['child_of' => $context]);
+        } else {
+            $tracer->startActiveSpan($this->nameGetter->getNameByRequest($request));
+        }
+
+        $tracer->getActiveSpan()->setTag('http.method', $event->getRequest()->getMethod());
+        $tracer->getActiveSpan()->setTag('http.url', $event->getRequest()->getUri());
     }
 
     /**
@@ -53,19 +63,38 @@ class HttpListener
         $span = $this->openTracing->getTracer()->getActiveSpan();
 
         if ($span) {
+            $span->setTag('http.status_code', $event->getResponse()->getStatusCode());
+
             $span->finish();
         }
+
+        $this->openTracing->getTracer()->flush();
     }
 
     /**
-     * @param PostResponseEvent $event
+     * @param GetResponseForExceptionEvent $event
      */
-    public function onKernelException(PostResponseEvent $event): void
+    public function onKernelException(GetResponseForExceptionEvent $event): void
     {
         $span = $this->openTracing->getTracer()->getActiveSpan();
 
         if ($span) {
+            if ($event->hasResponse()) {
+                $span->setTag('http.status_code', $event->getResponse()->getStatusCode());
+            }
+
+            $span->log([
+                'error.kind'   => 'Exception',
+                'error.object' => get_class($event->getException()),
+                'message'      => $event->getException()->getMessage(),
+                'stack'        => $event->getException()->getTraceAsString(),
+            ]);
+
+            $span->setTag('error', true);
+
             $span->finish();
         }
+
+        $this->openTracing->getTracer()->flush();
     }
 }

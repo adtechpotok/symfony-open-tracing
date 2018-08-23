@@ -1,0 +1,5 @@
+parameters:
+    open_tracing.tracer.config.service_name: 'symfony-open-tracing'
+    open_tracing.tracer.config.reporting_host: 0.0.0.0
+    open_tracing.tracer.config.reporting_port: 5775
+    open_tracing.tracer.config.is_disabled: false
