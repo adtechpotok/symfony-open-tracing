@@ -104,7 +104,7 @@ class HttpListener
 
             $span->log([
                 'error.kind'   => 'Exception',
-                'error.object' => get_class($event->getException()),
+                'error.object' => \get_class($event->getException()),
                 'message'      => $event->getException()->getMessage(),
                 'stack'        => $event->getException()->getTraceAsString(),
             ]);

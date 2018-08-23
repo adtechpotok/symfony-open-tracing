@@ -21,3 +21,13 @@ services:
             - { name: kernel.event_listener, event: kernel.terminate }
             - { name: kernel.event_listener, event: kernel.exception }
             - { name: kernel.event_listener, event: kernel.response }
+
+    open_tracing.cli_listener:
+        class: Adtechpotok\Bundle\SymfonyOpenTracing\EventListener\CliListener
+        arguments:
+            - '@open_tracing.tracer'
+            - '@open_tracing.name_getter'
+        tags:
+            - {name: kernel.event_listener, event: console.command}
+            - {name: kernel.event_listener, event: console.terminate}
+            - {name: kernel.event_listener, event: console.error}
