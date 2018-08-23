@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class SymfonyOpenTracingAdapterExtension extends Extension
+class SymfonyOpenTracingExtension extends Extension
 {
     /**
      * {@inheritdoc}
@@ -18,5 +18,6 @@ class SymfonyOpenTracingAdapterExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resource/config'));
         $loader->load('services.yml');
+        $loader->load('parameters.yml');
     }
 }
