@@ -7,6 +7,7 @@ namespace Adtechpotok\Bundle\SymfonyOpenTracing\Service;
 use Adtechpotok\Bundle\SymfonyOpenTracing\Contract\GetSpanNameByCommand;
 use Adtechpotok\Bundle\SymfonyOpenTracing\Contract\GetSpanNameByRequest;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class RootSpanNameBuilder implements GetSpanNameByRequest, GetSpanNameByCommand
@@ -47,11 +48,25 @@ class RootSpanNameBuilder implements GetSpanNameByRequest, GetSpanNameByCommand
 
     /**
      * @param Command $command
+     * @param InputInterface $input
      *
      * @return string
      */
-    public function getNameByCommand(Command $command): string
+    public function getNameByCommand(Command $command, InputInterface $input): string
     {
-        return sprintf('%s.%s', $this->cliNamePrefix, $command->getName());
+        $arguments = '';
+
+        foreach ($command->getDefinition()->getArguments() as $argument) {
+            if ($argument->getName() === 'command') {
+                continue;
+            }
+            $arguments .= ' ' . $input->getArgument($argument->getName());
+        }
+
+        if ($arguments) {
+            return sprintf('%s.%s %s', $this->cliNamePrefix, $command->getName(), $arguments);
+        } else {
+            return sprintf('%s.%s', $this->cliNamePrefix, $command->getName());
+        }
     }
 }

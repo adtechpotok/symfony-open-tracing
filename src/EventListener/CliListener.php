@@ -41,9 +41,13 @@ class CliListener
     {
         $tracer = $this->openTracing->getTracer();
 
-        $name = $this->nameGetter->getNameByCommand($event->getCommand());
+        $name = $this->nameGetter->getNameByCommand($event->getCommand(), $event->getInput());
 
-        $tracer->startActiveSpan($name);
+        $scope = $tracer->startActiveSpan($name);
+
+        foreach ($event->getInput()->getOptions() as $key => $value) {
+            $scope->getSpan()->setTag('cli.options.' . $key, $value);
+        }
     }
 
     /**

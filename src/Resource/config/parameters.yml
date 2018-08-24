@@ -8,3 +8,4 @@ parameters:
               reporting_host: 0.0.0.0
           logging: true
           null_tracer: false
+          max_buffer_length: 9000 # !important! should be less than output of command sysctl net.inet.udp.maxdgram
