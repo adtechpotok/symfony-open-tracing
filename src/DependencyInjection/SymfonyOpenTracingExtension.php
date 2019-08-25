@@ -18,5 +18,9 @@ class SymfonyOpenTracingExtension extends ConfigurableExtension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resource/config'));
         $loader->load('services.yml');
+
+        $container->setParameter('symfony_open_tracing.service_name', $mergedConfig['service_name']);
+        $container->setParameter('symfony_open_tracing.enabled', $mergedConfig['enabled']);
+        $container->setParameter('symfony_open_tracing.tracer_config', $mergedConfig['tracer_config']);
     }
 }
