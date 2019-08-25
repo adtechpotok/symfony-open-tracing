@@ -2,8 +2,9 @@ services:
     open_tracing.tracer:
         class: Adtechpotok\Bundle\SymfonyOpenTracing\Service\OpenTracingService
         arguments:
-            - '%open_tracing.tracer.service_name%'
-            - '%open_tracing.tracer.config%'
+            - '%open_tracing.enabled%'
+            - '%open_tracing.service_name%'
+            - '%open_tracing.config%'
 
     open_tracing.name_getter:
         class: Adtechpotok\Bundle\SymfonyOpenTracing\Service\RootSpanNameBuilder
