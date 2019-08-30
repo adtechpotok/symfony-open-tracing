@@ -44,7 +44,11 @@ class HttpListener
         $tracer = $this->openTracing->getTracer();
         $request = $event->getRequest();
 
-        $context = $tracer->extract(Formats\HTTP_HEADERS, $request->headers->all());
+        $headers = [];
+        foreach ($request->headers->all() as $key => $values) {
+            $headers[$key] = is_array($values) ? $values[0] : $values;
+        }
+        $context = $tracer->extract(Formats\HTTP_HEADERS, $headers);
 
         if ($context) {
             $tracer->startActiveSpan($this->nameGetter->getNameByRequest($request), ['child_of' => $context]);
