@@ -10,7 +10,7 @@
   ],
   "require": {
     "php": ">=7.1",
-    "jonahgeorge/jaeger-client-php": "0.4.0",
+    "jonahgeorge/jaeger-client-php": "~0.4",
     "symfony/config": "~3.4|~4.0",
     "symfony/console": "~3.4|~4.0",
     "symfony/dependency-injection": "~3.4.6|~4.1",
@@ -18,7 +18,7 @@
     "symfony/serializer-pack": "^1.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^7.4@dev"
+    "phpunit/phpunit": "^7.4"
   },
   "autoload": {
     "psr-4": {
@@ -34,9 +34,5 @@
     "branch-alias": {
       "dev-master": "1.0-dev"
     }
-  },
-  "minimum-stability": "dev",
-  "require-dev": {
-    "phpunit/phpunit": "^7.4@dev"
   }
 }

@@ -20,9 +20,9 @@ class OpenTracingService
      * @param string $appName
      * @param array  $config
      */
-    public function __construct(string $appName, array $config)
+    public function __construct(bool $enabled, string $appName, array $config)
     {
-        if (isset($config['null_tracer']) && $config['null_tracer']) {
+        if (!$enabled) {
             $this->tracer = new NoopTracer();
         } else {
             (new Config($config, $appName))->initializeTracer();
